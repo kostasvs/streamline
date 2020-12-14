@@ -13,5 +13,10 @@
 
 <body>
 	{{> navbar}}
-	{{> planesList}}
+
+	{{#if currentUser}}
+		{{> planesList}}
+	{{else}}
+		{{> register}}
+	{{/if}}
 </body>
