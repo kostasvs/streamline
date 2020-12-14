@@ -1,0 +1,26 @@
+.hero-header {
+	background-image: url("assets/header.jpg");
+	background-color: #cccccc;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+/*.hero-text .slogan {
+	text-shadow: 0px 2px 8px #000000, 1px 2px 2px #000000;
+}*/
+.hero-text .slogan {
+	text-shadow: 1px 2px 2px #000000;
+	background-color: #1d1d1d99;
+	padding: 3em 1.5em !important;
+}
+
+.hero-text .slogan h1 {
+	font-weight: 500;
+}
+
+@media (min-width: 768px) {
+
+	.mw-50 {
+		max-width: 50%;
+	}
+}

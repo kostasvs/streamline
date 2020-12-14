@@ -1,0 +1,35 @@
+<template name="navbar">
+
+	<nav class="navbar navbar-expand-md navbar-light static-top">
+		<div class="container">
+			<!--badge-->
+			<a class="navbar-brand" href="#">Streamline</a>
+			<!--toggler-->
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+					aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			
+			<div class="collapse navbar-collapse" id="navbarResponsive">
+				<ul class="navbar-nav ml-auto d-flex align-items-center">
+					<!--log in-->
+					<li class="nav-item d-none d-md-block">
+						<a class="nav-link btn btn-secondary text-light m-2 px-2" href="#">Log in</a>
+					</li>
+					<li class="nav-item d-block d-md-none">
+						<a class="nav-link" href="#">Log in</a>
+					</li>
+					<!--sign up-->
+					<li class="nav-item d-none d-md-block">
+						<a class="nav-link btn btn-primary text-light m-2 px-2" href="#">Sign up</a>
+					</li>
+					<li class="nav-item d-block d-md-none">
+						<a class="nav-link" href="#">Sign up</a>
+					</li>
+
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+</template>

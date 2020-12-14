@@ -1,0 +1,78 @@
+<template name="register">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-12 hero-header py-5">
+				<div class="container-xl hero-text">
+					<div class="row d-flex align-items-start">
+						<!--slogan-->
+						<div class="col text-center">
+							<div class="text-white slogan my-4 px-2 rounded">
+								<h1 class="pb-3">You keep them flying, we keep you organized.</h1>
+								<h4 class="font-weight-normal">Distribute tasks, set deadlines and monitor progress in a simple manner.</h4>
+							</div>
+						</div>
+						<!--card-->
+						<div class="col-12 col-md-6 col-lg-5">
+							<div class="card mt-4 shadow">
+								<div class="card-body">
+									<h5 class="card-title">Create an account</h5>
+									<div class="card-text">
+										<form>
+											<!--email-->
+											<div class="form-group">
+												<label for="inputEmail1">Email address</label>
+												<input type="email" class="form-control" id="inputEmail1" aria-describedby="emailHelp">
+												<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+											</div>
+											<!--password-->
+											<div class="form-group">
+												<label for="inputPassword1">Password</label>
+												<input type="password" class="form-control" id="inputPassword1">
+											</div>
+											<!--role type-->
+											<div class="form-group">
+												<label for="inputType1">I am a:</label>
+												<nav class="nav nav-pills nav-fill border border-primary rounded" id="inputType1" role="tablist">
+													<a class="nav-link active" id='manager-tab' href="#manager" data-toggle="tab" role="tab"
+													   aria-controls="manager" aria-selected="true">Manager</a>
+													<a class="nav-link" id='employee-tab' href="#employee" data-toggle="tab" role="tab"
+													   aria-controls="employee" aria-selected="false">Employee</a>
+												</nav>
+											</div>
+											<!--per-role inputs-->
+											<div class="tab-content">
+												<!--manager inputs-->
+												<div class="tab-pane fade show active" id="manager" role="tabpanel" aria-labelledby="manager-tab">
+													<!--organization name-->
+													<div class="form-group">
+														<label for="inputOrg1">Organization name</label>
+														<input type="text" class="form-control" id="inputOrg1">
+													</div>
+												</div>
+												<!--employee inputs-->
+												<div class="tab-pane fade" id="employee" role="tabpanel" aria-labelledby="employee-tab">
+													<!--manager email-->
+													<div class="form-group">
+														<label for="inputEmail2">My manager's email</label>
+														<input type="email" class="form-control" id="inputEmail2" aria-describedby="email2Help">
+														<small id="email2Help" class="form-text text-muted">
+															Your manager needs to already have an account.
+															They will be asked to allow you into their organization.
+														</small>
+													</div>
+												</div>
+											</div>
+											<div class="text-right">
+												<button type="submit" class="btn btn-primary">Sign up</button>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
