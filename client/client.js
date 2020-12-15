@@ -23,6 +23,7 @@ Template.planesList.events({
 		var planeModal = $('#planeModal');
 		$('.planeFeedback', planeModal).hide();
 		$('input', planeModal).val('');
+		$('.btnRelease, .btnTakeIn', planeModal).hide();
 		planeModal.modal('show');
 	},
 	// plane info
@@ -34,6 +35,15 @@ Template.planesList.events({
 		$('#planeModel', planeModal).val(item.data('model'));
 		$('#planeReason', planeModal).val(item.data('reason'));
 		$('#planeId', planeModal).val(item.data('id'));
+		$('.btnRelease, .btnTakeIn, .textReleased', planeModal).hide();
+		var released = item.data('released');
+		if (released) released = new Date(released);
+		if (released) {
+			$('.btnTakeIn', planeModal).show();
+			$('.textReleased', planeModal)
+				.text('Released to service on ' + released.toLocaleDateString()).show();
+		}
+		else $('.btnRelease', planeModal).show();
 		planeModal.modal('show');
 	},
 });
@@ -69,6 +79,60 @@ Template.planeModal.events({
 					item.data('reason', reason);
 				}
 			});
+		return false;
+	},
+	// release
+	'click .btnRelease'(e) {
+		e.preventDefault();
+		var form = $(e.target).closest('form');
+		var planeId = $('#planeId', form).val();
+		Meteor.call('releasePlane', planeId, true, function (error, result) {
+
+			var errText = null;
+			if (error && error.reason) errText = error.reason;
+			else if (!result) errText = "Status updating failed!";
+			if (errText) {
+				// failed
+				$('.planeFeedback').removeClass('text-success').addClass('text-danger')
+					.text(errText).show();
+			}
+			else {
+				// ok
+				$('.planeFeedback').hide();
+				var planeModal = $('#planeModal');
+				planeModal.modal('hide');
+				// update item if exists
+				var item = $('#plane-item-' + planeId);
+				item.data('released', new Date());
+			}
+		});
+		return false;
+	},
+	// take in
+	'click .btnTakeIn'(e) {
+		e.preventDefault();
+		var form = $(e.target).closest('form');
+		var planeId = $('#planeId', form).val();
+		Meteor.call('releasePlane', planeId, false, function (error, result) {
+
+			var errText = null;
+			if (error && error.reason) errText = error.reason;
+			else if (!result) errText = "Status updating failed!";
+			if (errText) {
+				// failed
+				$('.planeFeedback').removeClass('text-success').addClass('text-danger')
+					.text(errText).show();
+			}
+			else {
+				// ok
+				$('.planeFeedback').hide();
+				var planeModal = $('#planeModal');
+				planeModal.modal('hide');
+				// update item if exists
+				var item = $('#plane-item-' + planeId);
+				item.data('released', null);
+			}
+		});
 		return false;
 	},
 });

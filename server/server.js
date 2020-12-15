@@ -89,16 +89,16 @@ Meteor.methods({
 		});
 		return true;
 	},
-	// release plane
-	releasePlane: function (id) {
+	// plane release/take in
+	releasePlane: function (id, release) {
 		var user = Meteor.user();
 		if (!user || !user.profile || !user.profile.isManager) return;
 		// find plane
 		var plane = Planes.findOne(id);
-		if (!plane || plane.organization != user.profile.organization || plane.releasedOn) return;
+		if (!plane || plane.organization != user.profile.organization) return;
 		// mark as released
 		Planes.update(plane._id, {
-			$set: { releasedOn: new Date() }
+			$set: { releasedOn: release ? new Date() : null }
 		});
 		return true;
 	},
