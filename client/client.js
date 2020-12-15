@@ -7,9 +7,11 @@ import 'bootstrap/dist/css/bootstrap.css';
 //import '../imports/planesList.html';
 //import '../imports/register.html';
 
+Meteor.subscribe('planes');
+
 Template.planesList.helpers({
 	// list
-	planesList() {
+	getList() {
 		return Planes.find({});
 	},
 });
@@ -18,14 +20,56 @@ Template.planesList.events({
 	// add plane
 	'click #addPlane'(e) {
 		e.preventDefault();
-		//if (!this.userId) return;
-		var plane = {
-			name: 'Plane',
-			owner: null,
-			createdOn: new Date(),
-		};
-		var id = Planes.insert(plane);
-		console.log("addPlane=" + id);
+		var planeModal = $('#planeModal');
+		$('.planeFeedback', planeModal).hide();
+		$('input', planeModal).val('');
+		planeModal.modal('show');
+	},
+	// plane info
+	'click .plane-item'(e) {
+		var item = $(e.target);
+		var planeModal = $('#planeModal');
+		$('.planeFeedback', planeModal).hide();
+		$('#planeName', planeModal).val(item.data('name'));
+		$('#planeModel', planeModal).val(item.data('model'));
+		$('#planeReason', planeModal).val(item.data('reason'));
+		$('#planeId', planeModal).val(item.data('id'));
+		planeModal.modal('show');
+	},
+});
+
+Template.planeModal.events({
+	// save plane
+	'submit #planeForm'(e) {
+		var form = $(e.target);
+		var name = $('#planeName', form).val();
+		var model = $('#planeModel', form).val();
+		var reason = $('#planeReason', form).val();
+		var planeId = $('#planeId', form).val();
+		Meteor.call(planeId ? 'updatePlane' : 'addPlane',
+			name, model, reason, planeId, function (error, result) {
+
+				var errText = null;
+				if (error && error.reason) errText = error.reason;
+				else if (!result) errText = "Saving changes failed!";
+				if (errText) {
+					// failed
+					$('.planeFeedback').removeClass('text-success').addClass('text-danger')
+						.text(errText).show();
+				}
+				else {
+					// ok
+					$('.planeFeedback').hide();
+					var planeModal = $('#planeModal');
+					planeModal.modal('hide');
+					// update item if exists
+					var item = $('#plane-item-' + planeId);
+					item.data('name', name);
+					item.data('model', model);
+					item.data('reason', reason);
+				}
+			});
+		return false;
 	},
 });
 
@@ -116,11 +160,6 @@ $(function () {
 		}
 	};
 	checkLogged();
-
-	// modal button
-	$('.btnSubmit').click(function () {
-		$(this).closest('.modal').find('form').submit();
-	});
 
 	// registration page
 	var registerCard = $('.registerCard');

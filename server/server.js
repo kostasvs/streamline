@@ -6,11 +6,102 @@ Meteor.startup(() => {
 });
 
 // publish list of planes
-//Meteor.publish("planes", function () {
-//    return Planes.find();
-//});
+Meteor.publish("planes", function () {
+	var user = Meteor.user();
+	if (!user || !user.profile) return;
+	var org = user.profile.organization;
+	return Planes.find({
+		organization: org
+	});
+});
 
 Meteor.methods({
+	// add plane
+	addPlane: function (name, model, reason) {
+		var user = Meteor.user();
+		if (!user || !user.profile || !user.profile.isManager) return;
+		// check data
+		name = (name || '').trim();
+		model = (model || '').trim();
+		reason = (reason || '').trim();
+		[name, model].forEach(function (value, index) {
+			var field = index == 0 ? "Name or S/N" : "Type or Model";
+			if (!value) {
+				throw new Meteor.Error('error',
+					field + " required.");
+			}
+			if (index.length > 50) {
+				throw new Meteor.Error('error',
+					field + " must be less than 50 characters.");
+			}
+		});
+		if (reason.length > 200) {
+			throw new Meteor.Error('error',
+				"Reason must be less than 200 characters.");
+		}
+		// add
+		var plane = Planes.insert({
+			name: name,
+			model: model,
+			reason: reason,
+			organization: user.profile.organization,
+			createdOn: new Date(),
+		});
+		return plane;
+	},
+	// update plane
+	updatePlane: function (name, model, reason, id) {
+		var user = Meteor.user();
+		if (!user || !user.profile || !user.profile.isManager) return;
+		// find plane
+		var plane = Planes.findOne(id);
+		if (!plane || plane.organization != user.profile.organization || plane.releasedOn) {
+			throw new Meteor.Error('error',
+				"You are not allowed to edit this plane.");
+		}
+		// check data
+		name = (name || '').trim();
+		model = (model || '').trim();
+		reason = (reason || '').trim();
+		[name, model].forEach(function (value, index) {
+			var field = index == 0 ? "Name or S/N" : "Type or Model";
+			if (!value) {
+				throw new Meteor.Error('error',
+					field + " required.");
+			}
+			if (index.length > 50) {
+				throw new Meteor.Error('error',
+					field + " must be less than 50 characters.");
+			}
+		});
+		if (reason.length > 200) {
+			throw new Meteor.Error('error',
+				"Reason must be less than 200 characters.");
+		}
+		// mark as released
+		Planes.update(plane._id, {
+			$set: {
+				name: name,
+				model: model,
+				reason: reason,
+				lastEdited: new Date()
+			}
+		});
+		return true;
+	},
+	// release plane
+	releasePlane: function (id) {
+		var user = Meteor.user();
+		if (!user || !user.profile || !user.profile.isManager) return;
+		// find plane
+		var plane = Planes.findOne(id);
+		if (!plane || plane.organization != user.profile.organization || plane.releasedOn) return;
+		// mark as released
+		Planes.update(plane._id, {
+			$set: { releasedOn: new Date() }
+		});
+		return true;
+	},
 	// user position text
 	getUserPosition: function () {
 		var user = Meteor.user();
@@ -81,8 +172,7 @@ Meteor.methods({
 				name: name,
 				isManager: isManager,
 				organization: myOrg,
-			},
-			createdOn: new Date(),
+			}
 		});
 		if (!uid) {
 			throw new Meteor.Error('error',
@@ -90,7 +180,7 @@ Meteor.methods({
 		}
 		if (isManager) {
 			// update or remove new organization
-			if (uid) Organizations.update(myOrg, {
+			if (uid) Organizations.update(myOrg._id, {
 				$set: { owner: uid }
 			});
 			else Organizations.remove(myOrg);

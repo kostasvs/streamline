@@ -1,6 +1,18 @@
+.plane-item {
+	display: inline-block;
+	border-radius: 2em !important;
+	color: #007bff !important;
+	background-color: rgba(0, 123, 255, 0.2) !important;
+}
+.plane-item:focus,
+.plane-item:hover {
+	background-color: rgba(102, 176, 255, 0.2) !important;
+}
+
 .cursor-pointer {
 	cursor: pointer;
 }
+
 .preloader {
 	background-color: #ffffff;
 	height: 100%;
