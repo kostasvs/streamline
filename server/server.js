@@ -11,10 +11,27 @@ Meteor.startup(() => {
 //});
 
 Meteor.methods({
+	// user position text
+	getUserPosition: function () {
+		var user = Meteor.user();
+		if (!user || !user.profile) return "";
+		var org = Organizations.findOne(user.profile.organization) || "(unknown)";
+		return (user.profile.isManager ? "Manager of " : "Member of ") + org.name;
+	},
 	// register user
-	registerUser: function (email, pass, role, orgName, managerEmail) {
+	registerUser: function (name, email, pass, role, orgName, managerEmail) {
 		var isManager = role === 'manager';
 		var myOrg;
+		// check name
+		name = (name || '').trim();
+		if (!name) {
+			throw new Meteor.Error('error',
+				"Your name is required.");
+		}
+		if (name.length > 50) {
+			throw new Meteor.Error('error',
+				"Your name must be less than 50 characters.");
+		}
 		// check password
 		if (pass.length < 5) {
 			throw new Meteor.Error('error',
@@ -61,6 +78,7 @@ Meteor.methods({
 			email: email,
 			password: pass,
 			profile: {
+				name: name,
 				isManager: isManager,
 				organization: myOrg,
 			},

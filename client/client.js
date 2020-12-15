@@ -29,16 +29,27 @@ Template.planesList.events({
 	},
 });
 
+Template.personalCard.helpers({
+	// subtext
+	subtext() {
+		Meteor.call('getUserPosition', function (error, result) {
+			if (result) $('.personalCardSubText').text(result).slideDown('fast');
+		});
+		return "";
+	},
+});
+
 Template.register.events({
 	// registration form
 	'submit #registerForm'(e) {
 		var form = $(e.target);
+		var name = $('#inputName', form).val();
 		var email = $('#inputEmail1', form).val();
 		var pass = $('#inputPassword1', form).val();
 		var role = $('#roleInput', form).val();
 		var orgName = $('#inputOrg1', form).val();
 		var email2 = $('#inputEmail2', form).val();
-		Meteor.call('registerUser', email, pass, role, orgName, email2, function (error, result) {
+		Meteor.call('registerUser', name, email, pass, role, orgName, email2, function (error, result) {
 			var errText = null;
 			if (error && error.reason) errText = error.reason;
 			else if (!result) errText = "Registration failed!";
@@ -89,6 +100,23 @@ Template.navbar.events({
 });
 
 $(function () {
+	// preloader
+	var isLoading = true;
+	function checkLogged() {
+		if (Meteor.loggingIn()) {
+			if (!isLoading) {
+				$('.preloader').show();
+				isLoading = true;
+			}
+			setTimeout(checkLogged, 100);
+		}
+		else {
+			$('.preloader').fadeOut();
+			isLoading = false;
+		}
+	};
+	checkLogged();
+
 	// modal button
 	$('.btnSubmit').click(function () {
 		$(this).closest('.modal').find('form').submit();

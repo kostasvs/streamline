@@ -1,0 +1,16 @@
+<template name="personalCard">
+
+	<div class="card mb-3">
+		<div class="card-body">
+			<h5 class="card-title">
+				<i class="fa fa-id-card-o pr-2"></i>
+				{{currentUser.profile.name}}
+			</h5>
+			<p class="card-text">
+				<div class="personalCardSubText" style="display:none">
+					{{subtext}}
+				</div>
+			</p>
+		</div>
+	</div>
+</template>

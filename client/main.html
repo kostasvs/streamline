@@ -12,11 +12,23 @@
 </head>
 
 <body>
+	<div class="preloader">
+		<div class="lds-dual-ring"></div>
+	</div>
 	{{> navbar}}
-
-	{{#if currentUser}}
-		{{> planesList}}
-	{{else}}
-		{{> register}}
-	{{/if}}
+	{{> baseContainer}}
 </body>
+
+<template name="baseContainer">
+	<div class="container">
+		{{#if currentUser}}
+		<div class="row">
+			<div class="col-lg-6">
+				{{> personalCard}}
+			</div>
+		</div>
+		{{else}}
+		{{> register}}
+		{{/if}}
+	</div>
+</template>
