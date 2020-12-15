@@ -9,25 +9,25 @@
 					aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
-			
+
 			<div class="collapse navbar-collapse" id="navbarResponsive">
 				<ul class="navbar-nav ml-auto d-flex align-items-center">
 					{{#if currentUser}}
 					<!--log out-->
 					<li class="nav-item d-none d-md-block">
-						<a class="nav-link btn btn-secondary text-light m-2 px-2 jsLogout" href="#">Log out</a>
+						<a class="nav-link btn btn-secondary text-light m-2 px-2 btnLogout" href="#">Log out</a>
 					</li>
 					<li class="nav-item d-block d-md-none">
-						<a class="nav-link jsLogout" href="#">Log out</a>
+						<a class="nav-link btnLogout" href="#">Log out</a>
 					</li>
 
 					{{else}}
 					<!--log in-->
 					<li class="nav-item d-none d-md-block">
-						<a class="nav-link btn btn-secondary text-light m-2 px-2" href="/login">Log in</a>
+						<a class="nav-link btn btn-secondary text-light m-2 px-2" data-toggle="modal" data-target="#loginModal">Log in</a>
 					</li>
 					<li class="nav-item d-block d-md-none">
-						<a class="nav-link" href="/login">Log in</a>
+						<a class="nav-link" data-toggle="modal" data-target="#loginModal">Log in</a>
 					</li>
 					<!--sign up-->
 					<li class="nav-item d-none d-md-block">
@@ -42,5 +42,51 @@
 			</div>
 		</div>
 	</nav>
+
+	<!--login modal-->
+	<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Log in</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form id="loginForm">
+						<p class="text-danger loginFeedback" style="display:none"></p>
+						<!--email-->
+						<div class="row form-group">
+							<div class="col-md-4">
+								<label for="loginName" class="col-form-label">Email:</label>
+							</div>
+							<div class="col">
+								<input type="email" class="form-control" id="loginName">
+							</div>
+						</div>
+						<!--password-->
+						<div class="row form-group">
+							<div class="col-md-4">
+								<label for="loginPass" class="col-form-label">Password:</label>
+							</div>
+							<div class="col">
+								<input type="password" class="form-control" id="loginPass">
+							</div>
+						</div>
+						<!--hidden submit to allow submit w/ enter-->
+						<input type="submit"
+							   style="position: absolute; left: -9999px; width: 1px; height: 1px;"
+							   tabindex="-1" />
+					</form>
+				</div>
+				<!--actual buttons-->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<button type="button" class="btn btn-primary btnSubmit">Log in</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 </template>

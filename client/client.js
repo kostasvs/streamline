@@ -43,19 +43,57 @@ Template.register.events({
 			if (error && error.reason) errText = error.reason;
 			else if (!result) errText = "Registration failed!";
 			if (errText) {
+				// failed
 				$('.registerFeedback').removeClass('text-success').addClass('text-danger')
 					.text(errText).show();
 			}
 			else {
+				// ok, log in
 				$('.registerFeedback').addClass('text-success').removeClass('text-danger')
 					.text("Registration success").show();
+				var loginForm = $('#loginForm');
+				$('#loginName', loginForm).val(email);
+				$('#loginPass', loginForm).val(pass);
+				loginForm.submit();
 			}
 		});
 		return false;
 	},
 });
 
+Template.navbar.events({
+	// login form
+	'submit #loginForm'(e) {
+		var form = $(e.target);
+		var email = $('#loginName', form).val();
+		var pass = $('#loginPass', form).val();
+		Meteor.loginWithPassword(email, pass, function (error) {
+			if (error) {
+				// failed
+				var errText = error.reason || "Login failed (unknown reason)";
+				$('.loginFeedback').removeClass('text-success').addClass('text-danger')
+					.text(errText).show();
+			}
+			else {
+				$('.loginFeedback').hide();
+				form.closest('.modal').modal('hide');
+			}
+		});
+		return false;
+	},
+	// logout
+	'click .btnLogout'(e) {
+		e.preventDefault();
+		Meteor.logout();
+	},
+});
+
 $(function () {
+	// modal button
+	$('.btnSubmit').click(function () {
+		$(this).closest('.modal').find('form').submit();
+	});
+
 	// registration page
 	var registerCard = $('.registerCard');
 	if (registerCard.length) {
