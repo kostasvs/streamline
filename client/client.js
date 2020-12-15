@@ -1,5 +1,6 @@
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
+import { Session } from 'meteor/session';
 import 'bootstrap/dist/js/bootstrap.bundle';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -12,11 +13,33 @@ Meteor.subscribe('planes');
 Template.planesList.helpers({
 	// list
 	getList() {
-		return Planes.find({});
+		var filters = {}, setFilter = Session.get('planeListFilter');
+		if (setFilter === 1) filters = { releasedOn: null };
+		else if (setFilter === 2) filters = {
+			releasedOn: { $not: null } };
+		return Planes.find(filters);
+	},
+	// filter
+	showAll() {
+		return !Session.get('planeListFilter');
+	},
+	showActive() {
+		return Session.get('planeListFilter') === 1;
+	},
+	showReleased() {
+		return Session.get('planeListFilter') === 2;
 	},
 });
 
 Template.planesList.events({
+	// filter
+	'click .planesListFilter'(e) {
+		var btn = $(e.target);
+		e.preventDefault();
+		var toFilter = btn.hasClass('planesListReleased') ? 2 :
+			(btn.hasClass('planesListActive') ? 1 : 0);
+		Session.set('planeListFilter', toFilter);
+	},
 	// add plane
 	'click #addPlane'(e) {
 		e.preventDefault();

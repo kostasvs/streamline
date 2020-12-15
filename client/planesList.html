@@ -1,6 +1,32 @@
 ﻿<template name="planesList">
 
-	<h4>Planes list</h4>
+	<div class="row align-items-center mb-1">
+		<div class="col-auto">
+			<h4 class="mr-2 mb-1">Planes list</h4>
+		</div>
+		<div class="col">
+			<ul class="nav nav-pills">
+				<li class="nav-item">
+					<a class="nav-link planesListFilter planesListAll {{#if showAll}}active{{/if}}" href="#">
+						<i class="fa fa-bars mr-1"></i>
+						All
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link planesListFilter planesListActive {{#if showActive}}active{{/if}}" href="#">
+						<i class="fa fa-exclamation-circle mr-1"></i>
+						Active
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link planesListFilter planesListReleased {{#if showReleased}}active{{/if}}" href="#">
+						<i class="fa fa-check mr-1"></i>
+						Released
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
 	<div class="scroll-container mb-2">
 		<div class="scroll-content">
 			{{#each plane in getList}}
