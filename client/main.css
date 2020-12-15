@@ -1,3 +1,11 @@
+.scroll-container {
+	max-height: 200px;
+}
+
+.scroll-content {
+	overflow-y: auto;
+}
+
 .plane-item {
 	display: inline-block;
 	border-radius: 2em !important;
@@ -7,6 +15,15 @@
 .plane-item:focus,
 .plane-item:hover {
 	background-color: rgba(102, 176, 255, 0.2) !important;
+}
+.plane-item.released {
+	color: #28a745 !important;
+	background-color: rgba(40, 167, 69, 0.2) !important;
+}
+
+.plane-item.released:focus,
+.plane-item.released:hover {
+	background-color: rgba(103, 199, 125, 0.2) !important;
 }
 
 .cursor-pointer {

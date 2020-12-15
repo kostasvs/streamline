@@ -46,6 +46,7 @@ Meteor.methods({
 			reason: reason,
 			organization: user.profile.organization,
 			createdOn: new Date(),
+			enteredOn: new Date(),
 		});
 		return plane;
 	},
@@ -97,8 +98,12 @@ Meteor.methods({
 		var plane = Planes.findOne(id);
 		if (!plane || plane.organization != user.profile.organization) return;
 		// mark as released
+		var updates = {
+			releasedOn: release ? new Date() : null
+		};
+		if (!release) updates.enteredOn = new Date();
 		Planes.update(plane._id, {
-			$set: { releasedOn: release ? new Date() : null }
+			$set: updates
 		});
 		return true;
 	},

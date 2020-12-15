@@ -1,20 +1,24 @@
 ﻿<template name="planesList">
 
 	<h4>Planes list</h4>
-	<div class="mb-2">
-		{{#each plane in getList}}
-		<span class="px-3 py-2 m-2 plane-item btn" id="plane-item-{{plane._id}}"
-			  data-name="{{plane.name}}"
-			  data-model="{{plane.model}}"
-			  data-reason="{{plane.reason}}"
-			  data-released="{{plane.releasedOn}}"
-			  data-id="{{plane._id}}">
-			<i class="fa fa-plane pr-2"></i>
-			{{plane.name}}
-		</span>
-		{{else}}
-		<p class="text-secondary">No planes to show.</p>
-		{{/each}}
+	<div class="scroll-container mb-2">
+		<div class="scroll-content">
+			{{#each plane in getList}}
+			<span class="px-3 py-2 m-2 plane-item btn {{#if plane.releasedOn}}released{{/if}}"
+				  id="plane-item-{{plane._id}}"
+				  data-name="{{plane.name}}"
+				  data-model="{{plane.model}}"
+				  data-reason="{{plane.reason}}"
+				  data-entered="{{plane.enteredOn}}"
+				  data-released="{{plane.releasedOn}}"
+				  data-id="{{plane._id}}">
+				<i class="fa fa-plane pr-2"></i>
+				{{plane.name}}
+			</span>
+			{{else}}
+			<p class="text-secondary">No planes to show.</p>
+			{{/each}}
+		</div>
 	</div>
 	<button class="btn btn-primary" type="button" id="addPlane">
 		<i class="fa fa-plus mr-2"></i>

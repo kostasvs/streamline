@@ -40,10 +40,15 @@ Template.planesList.events({
 		if (released) released = new Date(released);
 		if (released) {
 			$('.btnTakeIn', planeModal).show();
-			$('.textReleased', planeModal)
+			$('.textReleased', planeModal).addClass('text-success')
 				.text('Released to service on ' + released.toLocaleDateString()).show();
 		}
-		else $('.btnRelease', planeModal).show();
+		else {
+			$('.btnRelease', planeModal).show();
+			var entered = new Date(item.data('entered'));
+			$('.textReleased', planeModal).removeClass('text-success')
+				.text('Taken in for maintenance on ' + entered.toLocaleDateString()).show();
+		}
 		planeModal.modal('show');
 	},
 });
@@ -103,7 +108,7 @@ Template.planeModal.events({
 				planeModal.modal('hide');
 				// update item if exists
 				var item = $('#plane-item-' + planeId);
-				item.data('released', new Date());
+				item.addClass('released').data('released', new Date());
 			}
 		});
 		return false;
@@ -130,7 +135,7 @@ Template.planeModal.events({
 				planeModal.modal('hide');
 				// update item if exists
 				var item = $('#plane-item-' + planeId);
-				item.data('released', null);
+				item.removeClass('released').data('entered', new Date()).data('released', null);
 			}
 		});
 		return false;
