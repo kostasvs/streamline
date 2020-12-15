@@ -9,6 +9,7 @@
 	},
 	"dependencies": {
 		"@babel/runtime": "^7.10.4",
+		"bcrypt": "^5.0.0",
 		"bootstrap": "^4.5.3",
 		"jquery": "^3.5.1",
 		"meteor-node-stubs": "^1.0.1",
