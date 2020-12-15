@@ -1,3 +1,6 @@
+.cursor-pointer {
+	cursor: pointer;
+}
 .preloader {
 	background-color: #ffffff;
 	height: 100%;

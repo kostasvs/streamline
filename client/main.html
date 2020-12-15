@@ -20,15 +20,15 @@
 </body>
 
 <template name="baseContainer">
+	{{#if currentUser}}
 	<div class="container">
-		{{#if currentUser}}
 		<div class="row">
 			<div class="col-lg-6">
 				{{> personalCard}}
 			</div>
 		</div>
-		{{else}}
-		{{> register}}
-		{{/if}}
 	</div>
+	{{else}}
+	{{> register}}
+	{{/if}}
 </template>
