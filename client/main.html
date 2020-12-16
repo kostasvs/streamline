@@ -1,4 +1,4 @@
-<head>
+﻿<head>
 	<title>Streamline</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -25,11 +25,13 @@
 		<div class="row">
 			<div class="col-lg-8">
 				{{> personalCard}}
+			</div>
+			<div class="col-12">
 				{{> planesList}}
-				{{> planeModal}}
 			</div>
 		</div>
 	</div>
+	{{> planeModal}}
 	{{else}}
 	{{> register}}
 	{{/if}}

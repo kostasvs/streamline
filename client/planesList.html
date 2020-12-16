@@ -38,8 +38,19 @@
 				  data-entered="{{plane.enteredOn}}"
 				  data-released="{{plane.releasedOn}}"
 				  data-id="{{plane._id}}">
-				<i class="fa fa-plane pr-2"></i>
-				{{plane.name}}
+				<span class="row align-items-center">
+					<span class="col-auto pr-0">
+						<i class="fa fa-plane fa-2x"></i>
+					</span>
+					<span class="col text-left">
+						<span class="d-block font-weight-bold">
+							{{plane.name}}
+						</span>
+						<span class="d-block">
+							{{plane.model}}
+						</span>
+					</span>
+				</span>
 			</span>
 			{{else}}
 			<p class="text-secondary">No planes to show.</p>

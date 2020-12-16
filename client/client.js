@@ -34,7 +34,7 @@ Template.planesList.helpers({
 Template.planesList.events({
 	// filter
 	'click .planesListFilter'(e) {
-		var btn = $(e.target);
+		var btn = $(e.currentTarget);
 		e.preventDefault();
 		var toFilter = btn.hasClass('planesListReleased') ? 2 :
 			(btn.hasClass('planesListActive') ? 1 : 0);
@@ -46,12 +46,12 @@ Template.planesList.events({
 		var planeModal = $('#planeModal');
 		$('.planeFeedback', planeModal).hide();
 		$('input', planeModal).val('');
-		$('.btnRelease, .btnTakeIn', planeModal).hide();
+		$('.btnRelease, .btnTakeIn, .textReleased', planeModal).hide();
 		planeModal.modal('show');
 	},
 	// plane info
 	'click .plane-item'(e) {
-		var item = $(e.target);
+		var item = $(e.currentTarget);
 		var planeModal = $('#planeModal');
 		$('.planeFeedback', planeModal).hide();
 		$('#planeName', planeModal).val(item.data('name'));
@@ -69,6 +69,7 @@ Template.planesList.events({
 		else {
 			$('.btnRelease', planeModal).show();
 			var entered = new Date(item.data('entered'));
+			console.log(item.data('entered'));
 			$('.textReleased', planeModal).removeClass('text-success')
 				.text('Taken in for maintenance on ' + entered.toLocaleDateString()).show();
 		}
@@ -77,9 +78,15 @@ Template.planesList.events({
 });
 
 Template.planeModal.events({
+	// modal autofocus
+	'shown.bs.modal .modal'(e) {
+		var modal = $(e.currentTarget);
+		$('.auto-focus', modal).trigger('focus');
+		console.log($('.auto-focus', modal).length);
+	},
 	// save plane
 	'submit #planeForm'(e) {
-		var form = $(e.target);
+		var form = $(e.currentTarget);
 		var name = $('#planeName', form).val();
 		var model = $('#planeModel', form).val();
 		var reason = $('#planeReason', form).val();
@@ -112,7 +119,7 @@ Template.planeModal.events({
 	// release
 	'click .btnRelease'(e) {
 		e.preventDefault();
-		var form = $(e.target).closest('form');
+		var form = $(e.currentTarget).closest('form');
 		var planeId = $('#planeId', form).val();
 		Meteor.call('releasePlane', planeId, true, function (error, result) {
 
@@ -139,7 +146,7 @@ Template.planeModal.events({
 	// take in
 	'click .btnTakeIn'(e) {
 		e.preventDefault();
-		var form = $(e.target).closest('form');
+		var form = $(e.currentTarget).closest('form');
 		var planeId = $('#planeId', form).val();
 		Meteor.call('releasePlane', planeId, false, function (error, result) {
 
@@ -178,7 +185,7 @@ Template.personalCard.helpers({
 Template.register.events({
 	// registration form
 	'submit #registerForm'(e) {
-		var form = $(e.target);
+		var form = $(e.currentTarget);
 		var name = $('#inputName', form).val();
 		var email = $('#inputEmail1', form).val();
 		var pass = $('#inputPassword1', form).val();
@@ -209,9 +216,15 @@ Template.register.events({
 });
 
 Template.navbar.events({
+	// modal autofocus
+	'shown.bs.modal .modal'(e) {
+		var modal = $(e.currentTarget);
+		$('.auto-focus', modal).trigger('focus');
+		console.log($('.auto-focus', modal).length);
+	},
 	// login form
 	'submit #loginForm'(e) {
-		var form = $(e.target);
+		var form = $(e.currentTarget);
 		var email = $('#loginName', form).val();
 		var pass = $('#loginPass', form).val();
 		Meteor.loginWithPassword(email, pass, function (error) {
