@@ -31,14 +31,14 @@
 					data-id="{{task._id}}">
 
 					<th scope="row">
-						<a class="task-link text-primary mb-1" href="#">{{task.name}}</a>
+						<a class="task-link {{getTaskColor task 'text-primary'}} mb-1" href="#">{{task.name}}</a>
 						<p class="text-secondary font-weight-normal mb-0">
 							<i class="fa fa-{{getTaskStatusIcon task}}"></i>
 							{{getTaskStatus task}}
 						</p>
 					</th>
 					<td>{{getTaskPlane task}}</td>
-					<td>{{getTaskDeadline task}}</td>
+					<td class="{{getTaskColor task ''}}">{{getTaskDeadline task}}</td>
 					<td class="task-assigned-container">
 						{{#each assigned in getTaskAssigned task._id}}
 						<div class="task-assigned" data-id="{{assigned.id}}">{{assigned.name}}</div>

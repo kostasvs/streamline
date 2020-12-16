@@ -12,6 +12,17 @@ function isValidDate(d) {
 	return d instanceof Date && !isNaN(d);
 }
 
+// date difference in days
+// a and b are javascript Date objects
+const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+function dateDiffInDays(a, b) {
+	// Discard the time and time-zone information.
+	const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+	const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+	return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+}
+
 Meteor.subscribe('planes');
 Meteor.subscribe('tasks');
 Meteor.subscribe('employees');
@@ -44,6 +55,16 @@ Template.tasksTable.helpers({
 		var status = +(task.status) || 0;
 		if (status < 0 || status >= statusLabels.length) return 'question';
 		return statusLabelIcons[status];
+	},
+	getTaskColor(task, defClass) {
+		var deadline = task.deadline;
+		if (deadline) deadline = new Date(deadline);
+		if (!deadline || !isValidDate(deadline)) return defClass;
+		var diff = dateDiffInDays(new Date(), deadline);
+		//if (diff > 3) return defClass;
+		//if (diff > 0) return 'text-warning';
+		if (diff > 0) return defClass;
+		return 'text-danger';
 	},
 	// get list of task assignees
 	getTaskAssigned: function (taskId) {
