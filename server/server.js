@@ -64,10 +64,6 @@ Meteor.methods({
 				throw new Meteor.Error('error',
 					"You are not allowed to edit this task.");
 			}
-			if (task.closedOn) {
-				throw new Meteor.Error('error',
-					"Can't edit a task once it has been closed.");
-			}
 		}
 		// check data
 		name = (name || '').trim();
@@ -118,6 +114,7 @@ Meteor.methods({
 		var data = {
 			status: status,
 			remarks: remarks,
+			closedOn: status === 1 ? new Date() : null,
 		};
 		if (user.profile.isManager) {
 			data.name = name;
@@ -126,6 +123,10 @@ Meteor.methods({
 			data.plane = plane;
 			data.deadline = deadline;
 			data.assignees = assigneesVerified;
+		}
+		else if (status != 1 && task && task.closedOn) {
+			throw new Meteor.Error('error',
+				"Only the manager can re-open closed tasks.");
 		}
 		if (task) {
 			// update

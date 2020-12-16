@@ -57,6 +57,7 @@ Template.tasksTable.helpers({
 		return statusLabelIcons[status];
 	},
 	getTaskColor(task, defClass) {
+		if (task.closedOn) return defClass;
 		var deadline = task.deadline;
 		if (deadline) deadline = new Date(deadline);
 		if (!deadline || !isValidDate(deadline)) return defClass;
@@ -146,7 +147,7 @@ Template.tasksTable.events({
 	'click #addTask'(e) {
 		e.preventDefault();
 		var taskModal = $('#taskModal');
-		$('.taskFeedback, .taskCreated', taskModal).hide();
+		$('.taskFeedback, .taskCreated, .textClosed', taskModal).hide();
 		$('input, textarea, select', taskModal).val('').change();
 		$('#taskStatus', taskModal).val(0).change();
 		$('.select-assigned', taskModal).remove();
@@ -157,7 +158,7 @@ Template.tasksTable.events({
 		e.preventDefault();
 		var item = $(e.currentTarget).closest('.task-item');
 		var taskModal = $('#taskModal');
-		$('.taskFeedback, .taskCreated', taskModal).hide();
+		$('.taskFeedback, .taskCreated, .textClosed', taskModal).hide();
 		$('#taskName', taskModal).val(item.data('name'));
 		$('#taskDescription', taskModal).val(item.data('description'));
 		$('#taskWC', taskModal).val(item.data('wc'));
@@ -187,6 +188,12 @@ Template.tasksTable.events({
 				$(this).parent().remove();
 			});
 		});
+		var closed = item.data('closed');
+		if (closed) closed = new Date(closed);
+		if (closed) {
+			$('.textClosed', taskModal).addClass('text-success')
+				.text('Closed on ' + closed.toLocaleDateString()).show();
+		}
 		$('#taskId', taskModal).val(item.data('id'));
 		taskModal.modal('show');
 	},
@@ -312,6 +319,9 @@ Template.taskModal.events({
 							$('<div>').addClass('task-assigned').data('id', val).text(mytext)
 								.appendTo(container);
 						});
+						var prevClosed = item.data('closed');
+						if (!prevClosed && status === '1') item.data('closed', new Date());
+						else if (prevClosed && status !== '1') item.data('closed', null);
 					}
 					else $('.taskCreated').hide().slideDown();
 				}
