@@ -1,3 +1,15 @@
+.tableFixHead {
+	overflow-y: auto;
+	max-height: 200px;
+}
+
+.tableFixHead thead th {
+	position: sticky;
+	top: 0;
+	background: white;
+	box-shadow: inset 0px 1px #dee2e6, 0 1px #dee2e6;
+}
+
 .scroll-container {
 	max-height: 200px;
 }

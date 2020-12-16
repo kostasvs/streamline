@@ -23,15 +23,20 @@
 	{{#if currentUser}}
 	<div class="container">
 		<div class="row">
-			<div class="col-lg-8">
+			<div class="col-lg-8 mb-4">
 				{{> personalCard}}
 			</div>
-			<div class="col-12">
+			<div class="col-12 mb-3">
 				{{> planesList}}
+			</div>
+			<hr class="w-100 my-4" />
+			<div class="col-12 mb-3">
+				{{> tasksTable}}
 			</div>
 		</div>
 	</div>
 	{{> planeModal}}
+	{{> taskModal}}
 	{{else}}
 	{{> register}}
 	{{/if}}

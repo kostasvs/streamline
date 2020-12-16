@@ -1,5 +1,6 @@
 ﻿<template name="planesList">
 
+	<!--header-->
 	<div class="row align-items-center mb-1">
 		<div class="col-auto">
 			<h4 class="mr-2 mb-1">Planes list</h4>
@@ -27,6 +28,7 @@
 			</ul>
 		</div>
 	</div>
+	<!--list-->
 	<div class="scroll-container mb-2">
 		<div class="scroll-content">
 			{{#each plane in getList}}
@@ -57,8 +59,11 @@
 			{{/each}}
 		</div>
 	</div>
+	<!--add-->
+	{{#if currentUser.profile.isManager}}
 	<button class="btn btn-primary" type="button" id="addPlane">
 		<i class="fa fa-plus mr-2"></i>
 		Add Plane
 	</button>
+	{{/if}}
 </template>

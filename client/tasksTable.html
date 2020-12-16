@@ -1,0 +1,65 @@
+<template name="tasksTable">
+
+	<!--header-->
+	<div class="row align-items-center mb-1">
+		<div class="col-auto">
+			<h4 class="mr-2 mb-1">Tasks list</h4>
+		</div>
+	</div>
+	<!--table-->
+	<div class="tableFixHead">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th scope="col">Task</th>
+					<th scope="col">Plane</th>
+					<th scope="col">Deadline</th>
+					<th scope="col">Assigned</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#each task in getList}}
+				<tr class="task-item"
+					id="task-item-{{task._id}}"
+					data-name="{{task.name}}"
+					data-description="{{task.description}}"
+					data-wc="{{task.wc}}"
+					data-plane="{{task.plane}}"
+					data-deadline="{{task.deadline}}"
+					data-status="{{task.status}}"
+					data-remarks="{{task.remarks}}"
+					data-id="{{task._id}}">
+
+					<th scope="row">
+						<a class="task-link text-primary mb-1" href="#">{{task.name}}</a>
+						<p class="text-secondary font-weight-normal mb-0">
+							<i class="fa fa-{{getTaskStatusIcon task}}"></i>
+							{{getTaskStatus task}}
+						</p>
+					</th>
+					<td>{{getTaskPlane task}}</td>
+					<td>{{getTaskDeadline task}}</td>
+					<td class="task-assigned-container">
+						{{#each assigned in getTaskAssigned task._id}}
+						<div class="task-assigned" data-id="{{assigned.id}}">{{assigned.name}}</div>
+						{{else}}
+						-
+						{{/each}}
+					</td>
+				</tr>
+				{{else}}
+				<tr>
+					<td class="text-center text-secondary" colspan="4">No tasks to show.</td>
+				</tr>
+				{{/each}}
+			</tbody>
+		</table>
+	</div>
+	<!--add-->
+	{{#if currentUser.profile.isManager}}
+	<button class="btn btn-primary" type="button" id="addTask">
+		<i class="fa fa-plus mr-2"></i>
+		Create Task
+	</button>
+	{{/if}}
+</template>

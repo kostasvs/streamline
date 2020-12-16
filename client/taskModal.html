@@ -1,0 +1,169 @@
+<template name="taskModal">
+	<!--task modal-->
+	<div class="modal fade" id="taskModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">
+						<i class="fa fa-check-square-o pr-2"></i>
+						Task information
+					</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form id="taskForm">
+						<p class="text-danger taskFeedback" style="display:none"></p>
+						<input type="hidden" class="form-control" id="taskId">
+						<!--name-->
+						<div class="row form-group">
+							<div class="col-12">
+								<label for="taskName" class="col-form-label">Name:</label>
+							</div>
+							<div class="col">
+								<input type="text" class="form-control auto-focus" id="taskName" maxlength="50" required {{readonlyIfEmployee}}>
+							</div>
+						</div>
+						<!--status-->
+						<div class="row form-group">
+							<div class="col-12">
+								<label for="taskStatus" class="col-form-label">Status:</label>
+							</div>
+							<div class="col">
+								<select id="taskStatus">
+									{{#each status in getStatusLabels}}
+									<option value="{{status.index}}">{{status.label}}</option>
+									{{/each}}
+								</select>
+							</div>
+						</div>
+						<!--remarks-->
+						<div class="row form-group">
+							<div class="col-12">
+								<label for="taskRemarks" class="col-form-label">Status remarks:</label>
+							</div>
+							<div class="col">
+								<input type="text" class="form-control" id="taskRemarks" maxlength="100">
+							</div>
+						</div>
+						<!--deadline-->
+						<div class="row form-group">
+							<div class="col-12">
+								<label for="taskDeadline" class="col-form-label">Deadline:</label>
+							</div>
+							<div class="col">
+								<input type="date" class="form-control" id="taskDeadline" {{readonlyIfEmployee}}>
+							</div>
+						</div>
+						<!--plane-->
+						<div class="row form-group">
+							<div class="col-12">
+								<label for="taskPlane" class="col-form-label">Plane:</label>
+							</div>
+							<div class="col">
+								{{> planesSelect}}
+							</div>
+						</div>
+						<!--assigned-->
+						<div class="row form-group">
+							<div class="col-12">
+								<label for="taskPlane" class="col-form-label">Assigned to:</label>
+								{{#if currentUser.profile.isManager}}
+								<button class="btn btn-primary ml-2 btnAddMore" type="button">
+									<i class="fa fa-plus mr-2"></i>
+									Add...
+								</button>
+								{{/if}}
+							</div>
+							<div class="col mb-2">
+								<div class="select-assigned-template d-none mt-2">
+									{{> employeesSelect}}
+									{{#if currentUser.profile.isManager}}
+									<button class="btn btn-secondary btnRemoveParent" type="button">
+										<i class="fa fa-times"></i>
+									</button>
+									{{/if}}
+								</div>
+							</div>
+						</div>
+						<!--wc-->
+						<div class="row form-group">
+							<div class="col-12">
+								<label for="taskWC" class="col-form-label">Work Card or Technical Manual:</label>
+							</div>
+							<div class="col">
+								<input type="text" class="form-control" id="taskWC" maxlength="50" {{readonlyIfEmployee}}>
+							</div>
+						</div>
+						<!--description-->
+						<div class="row form-group">
+							<div class="col-12">
+								<label for="taskDescription" class="col-form-label">Description:</label>
+							</div>
+							<div class="col">
+								<textarea class="form-control" id="taskDescription" maxlength="1000" rows="5" {{readonlyIfEmployee}}></textarea>
+							</div>
+						</div>
+						<!--submit-->
+						<div class="row">
+							<div class="col">
+							</div>
+							<div class="col-auto">
+								<button type="submit" class="btn btn-primary">Save</button>
+							</div>
+						</div>
+						<div class="alert alert-success alert-dismissible taskCreated mt-2" style="display:none">
+							<div class="row align-items-center">
+								<div class="col">
+									<p class="font-weight-bold">
+										<i class="fa fa-check-circle pr-2"></i>
+										Task created successfully
+									</p>
+									<p>You can close this dialog, or continue creating more tasks.</p>
+								</div>
+								<div class="col-auto">
+									<button type="submit" class="btn btn-secondary btnClear">Clear fields</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="planesSelect">
+	{{#if currentUser.profile.isManager}}
+	<select id="taskPlane">
+		<option value="">None</option>
+		{{#each plane in availablePlanes}}
+		{{> planesOption plane=plane}}
+		{{/each}}
+	</select>
+	{{else}}
+	<input type="text" value="{{plane.name}} ({{plane.model}})" readonly />
+	{{/if}}
+</template>
+
+<template name="planesOption">
+	<option value="{{plane._id}}">{{plane.name}} ({{plane.model}})</option>
+</template>
+
+<template name="employeesSelect">
+	{{#if currentUser.profile.isManager}}
+	<select class="taskEmployee template">
+		<option value="">None</option>
+		{{#each employee in availableEmployees}}
+		{{> employeesOption employee=employee}}
+		{{/each}}
+	</select>
+	{{else}}
+	<input type="text" value="{{employee.name}}" readonly />
+	{{/if}}
+</template>
+
+<template name="employeesOption">
+	<option value="{{employee._id}}">{{employee.profile.name}}</option>
+</template>

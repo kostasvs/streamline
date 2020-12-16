@@ -4,7 +4,7 @@
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">
+					<h5 class="modal-title">
 						<i class="fa fa-plane pr-2"></i>
 						Plane information
 					</h5>
@@ -22,7 +22,7 @@
 								<label for="planeName" class="col-form-label">Name or Serial Number:</label>
 							</div>
 							<div class="col">
-								<input type="text" class="form-control auto-focus" id="planeName" maxlength="50" required>
+								<input type="text" class="form-control auto-focus" id="planeName" maxlength="50" required {{readonlyIfEmployee}}>
 							</div>
 						</div>
 						<!--model-->
@@ -31,7 +31,7 @@
 								<label for="planeModel" class="col-form-label">Type or Model:</label>
 							</div>
 							<div class="col">
-								<input type="text" class="form-control" id="planeModel" maxlength="50" required>
+								<input type="text" class="form-control" id="planeModel" maxlength="50" required {{readonlyIfEmployee}}>
 							</div>
 						</div>
 						<!--reason-->
@@ -40,7 +40,7 @@
 								<label for="planeReason" class="col-form-label">Reason for maintenance:</label>
 							</div>
 							<div class="col">
-								<input type="text" class="form-control" id="planeReason" maxlength="200">
+								<input type="text" class="form-control" id="planeReason" maxlength="200" {{readonlyIfEmployee}}>
 							</div>
 						</div>
 						<!--released-->
@@ -52,7 +52,11 @@
 								<button type="button" class="btn btn-warning btnTakeIn">Take in for maintenance</button>
 							</div>
 							<div class="col-auto">
+								{{#if currentUser.profile.isManager}}
 								<button type="submit" class="btn btn-primary">Save</button>
+								{{else}}
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								{{/if}}
 							</div>
 						</div>
 					</form>
