@@ -141,9 +141,16 @@
 <template name="planesSelect">
 	<select id="taskPlane" {{disabledIfEmployee}}>
 		<option value="">None</option>
-		{{#each plane in availablePlanes}}
-		{{> planesOption plane=plane}}
-		{{/each}}
+		<optgroup label="Active">
+			{{#each plane in availablePlanes false}}
+			{{> planesOption plane=plane}}
+			{{/each}}
+		</optgroup>
+		<optgroup label="Released" disabled>
+			{{#each plane in availablePlanes true}}
+			{{> planesOption plane=plane}}
+			{{/each}}
+		</optgroup>
 	</select>
 </template>
 

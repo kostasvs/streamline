@@ -104,8 +104,14 @@ Meteor.methods({
 				"Status remarks must be less than 100 characters.");
 		}
 		plane = Planes.findOne(plane);
-		if (!plane || plane.releasedOn) plane = null;
-		else plane = plane._id;
+		if (!plane) plane = null;
+		else {
+			if (plane.releasedOn && (!task || task.plane !== plane._id)) {
+				throw new Meteor.Error('error',
+					"Cannot set the task on a plane that has been released.");
+			}
+			plane = plane._id;
+		}
 		deadline = new Date(deadline);
 		if (!isValidDate(deadline)) deadline = null;
 		var assigneesVerified = [];

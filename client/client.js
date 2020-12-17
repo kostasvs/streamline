@@ -103,21 +103,19 @@ Template.tasksTable.helpers({
 		}
 		return assigned;
 	},
-	// planes
-	availablePlanes() {
-		return Planes.find({ releasedOn: null });
-	},
-	// employees
-	availableEmployees() {
-		return Employees.find({});
-	},
 });
 
 Template.planesSelect.helpers({
 	// planes
-	availablePlanes() {
-		return Planes.find({ releasedOn: null });
+	availablePlanes(released) {
+		var filters;
+		if (!released) filters = { releasedOn: null };
+		else filters = {
+			releasedOn: { $not: null }
+		};
+		return Planes.find(filters);
 	},
+	// disabled
 	disabledIfEmployee() {
 		var user = Meteor.user();
 		return !user || !user.profile.isManager ? 'disabled' : '';
@@ -327,7 +325,7 @@ Template.taskModal.helpers({
 	availableEmployees() {
 		return Employees.find({});
 	},
-	// employees
+	// planes
 	availablePlanes() {
 		return Planes.find({});
 	},
