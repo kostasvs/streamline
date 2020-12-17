@@ -127,6 +127,9 @@
 									<button type="submit" class="btn btn-secondary btnClear">Clear fields</button>
 								</div>
 							</div>
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
 						</div>
 					</form>
 				</div>
@@ -136,16 +139,12 @@
 </template>
 
 <template name="planesSelect">
-	{{#if currentUser.profile.isManager}}
-	<select id="taskPlane">
+	<select id="taskPlane" {{disabledIfEmployee}}>
 		<option value="">None</option>
 		{{#each plane in availablePlanes}}
 		{{> planesOption plane=plane}}
 		{{/each}}
 	</select>
-	{{else}}
-	<input type="text" value="{{plane.name}} ({{plane.model}})" readonly />
-	{{/if}}
 </template>
 
 <template name="planesOption">
@@ -153,16 +152,12 @@
 </template>
 
 <template name="employeesSelect">
-	{{#if currentUser.profile.isManager}}
-	<select class="taskEmployee template">
+	<select class="taskEmployee template" {{disabledIfEmployee}}>
 		<option value="">None</option>
 		{{#each employee in availableEmployees}}
 		{{> employeesOption employee=employee}}
 		{{/each}}
 	</select>
-	{{else}}
-	<input type="text" value="{{employee.name}}" readonly />
-	{{/if}}
 </template>
 
 <template name="employeesOption">

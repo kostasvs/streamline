@@ -118,6 +118,10 @@ Template.planesSelect.helpers({
 	availablePlanes() {
 		return Planes.find({ releasedOn: null });
 	},
+	disabledIfEmployee() {
+		var user = Meteor.user();
+		return !user || !user.profile.isManager ? 'disabled' : '';
+	}
 });
 
 // reactive planesSelect
@@ -140,6 +144,10 @@ Template.employeesSelect.helpers({
 	availableEmployees() {
 		return Employees.find({});
 	},
+	disabledIfEmployee() {
+		var user = Meteor.user();
+		return !user || !user.profile.isManager ? 'disabled' : '';
+	}
 });
 
 // reactive employeesSelect
@@ -609,6 +617,13 @@ Template.personalCard.helpers({
 });
 
 Template.register.events({
+	// account type
+	'click #manager-tab'(e) {
+		$('#roleInput').val('manager');
+	},
+	'click #employee-tab'(e) {
+		$('#roleInput').val('employee');
+	},
 	// registration form
 	'submit #registerForm'(e) {
 		var form = $(e.currentTarget);
@@ -646,7 +661,6 @@ Template.navbar.events({
 	'shown.bs.modal .modal'(e) {
 		var modal = $(e.currentTarget);
 		$('.auto-focus', modal).trigger('focus');
-		console.log($('.auto-focus', modal).length);
 	},
 	// login form
 	'submit #loginForm'(e) {
@@ -691,15 +705,4 @@ $(function () {
 		}
 	};
 	checkLogged();
-
-	// registration page
-	var registerCard = $('.registerCard');
-	if (registerCard.length) {
-		$('#manager-tab', registerCard).click(function () {
-			$('#roleInput', registerCard).val('manager');
-		});
-		$('#employee-tab', registerCard).click(function () {
-			$('#roleInput', registerCard).val('employee');
-		});
-	}
 });

@@ -48,8 +48,10 @@
 						<!--submit-->
 						<div class="row">
 							<div class="col">
+								{{#if currentUser.profile.isManager}}
 								<button type="button" class="btn btn-danger btnRelease">Release to service</button>
 								<button type="button" class="btn btn-warning btnTakeIn">Take in for maintenance</button>
+								{{/if}}
 							</div>
 							<div class="col-auto">
 								{{#if currentUser.profile.isManager}}

@@ -37,6 +37,14 @@ Meteor.publish("tasks", function () {
 	if (!user.profile.isManager) filters.assignees = { $elemMatch: { $eq: user._id } };
 	return Tasks.find(filters);
 });
+Meteor.publish("employees", function () {
+	if (!this.userId) {
+		return this.ready();
+	}
+	var user = Meteor.user();
+	var org = user.profile.organization;
+	return Meteor.users.find({ 'profile.organization': org }, { profile: 1 });
+});
 
 Meteor.methods({
 	// add/update task
