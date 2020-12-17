@@ -12,6 +12,8 @@ Intended to be a web app for logging and tracking tasks carried out in an aircra
 * Add/edit tasks
 * Assign tasks
 * Close tasks
+* Filter planes by status (active/released)
+* Filter tasks by status, plane, assignee
 
 ### To Do
 * Profile info edit
