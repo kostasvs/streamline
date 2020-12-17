@@ -5,6 +5,21 @@
 		<div class="col-auto">
 			<h4 class="mr-2 mb-1">Tasks list</h4>
 		</div>
+		<div class="col">
+			<div class="row">
+				<div class="col-4">
+					{{> tasksFilterSelect filter='type'}}
+				</div>
+				<div class="col-4">
+					{{> tasksFilterSelect filter='plane'}}
+				</div>
+				{{#if currentUser.profile.isManager}}
+				<div class="col-4">
+					{{> tasksFilterSelect filter='assignee'}}
+				</div>
+				{{/if}}
+			</div>
+		</div>
 	</div>
 	<!--table-->
 	<div class="tableFixHead">
@@ -61,5 +76,47 @@
 		<i class="fa fa-plus mr-2"></i>
 		Create Task
 	</button>
+	{{/if}}
+</template>
+
+<template name="tasksFilterSelect">
+	<select class="tasksFilterSelect {{filter}}">
+		<option value="">
+			{{#if forType filter}}All{{/if}}
+			{{#if forPlane filter}}All planes{{/if}}
+			{{#if forAssignee filter}}All assignees{{/if}}
+		</option>
+
+		{{#if forType filter}}
+		<option value="open" {{isSelected "open"}}>Open</option>
+		<option value="closed" {{isSelected "closed"}}>Closed</option>
+		<option value="overdue" {{isSelected "overdue"}}>Overdue</option>
+		<option value="awaiting {{isSelected "awaiting"}}">Awaiting</option>
+		{{/if}}
+
+		{{#if forPlane filter}}
+		{{#each plane in availablePlanes}}
+		{{> tasksFilterOption plane=plane}}
+		{{/each}}
+		{{/if}}
+
+		{{#if forAssignee filter}}
+		{{#each employee in availableEmployees}}
+		{{> tasksFilterOption employee=employee}}
+		{{/each}}
+		{{/if}}
+	</select>
+</template>
+
+<template name="tasksFilterOption">
+	{{#if plane}}
+	<option value="{{plane._id}}" {{isPlaneSelected plane._id}}>
+		{{plane.name}} ({{plane.model}})
+	</option>
+	{{/if}}
+	{{#if employee}}
+	<option value="{{employee._id}}" {{isAssigneeSelected employee._id}}>
+		{{employee.profile.name}}
+	</option>
 	{{/if}}
 </template>

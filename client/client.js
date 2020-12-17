@@ -30,7 +30,26 @@ Meteor.subscribe('employees');
 Template.tasksTable.helpers({
 	// list
 	getList() {
-		var filters = {}, setFilter = Session.get('tasksTableFilter');
+		var filters = {},
+			typeFilter = Session.get('tasksTypeFilter'),
+			planeFilter = Session.get('tasksPlaneFilter'),
+			assigneeFilter = Session.get('tasksAssigneeFilter');
+		// type
+		if (typeFilter === 'open') filters = { closedOn: null };
+		else if (typeFilter === 'closed') filters = {
+			closedOn: { $not: null }
+		};
+		else if (typeFilter === 'overdue') filters = {
+			deadline: { $lt: new Date() },
+			closedOn: null
+		};
+		else if (typeFilter === 'awaiting') filters = {
+			status: { $gt: 1 }
+		};
+		// plane
+		if (planeFilter) filters.plane = planeFilter;
+		// assignee
+		if (assigneeFilter) filters.assignees = { $elemMatch: { $eq: assigneeFilter } };
 		return Tasks.find(filters);
 	},
 	// task helpers
@@ -142,7 +161,83 @@ Template.employeesOption.onRendered(function () {
 	}, 10);
 });
 
+// reactive tasksFilterSelect
+var tasksFilterSelectTimer = false;
+Template.tasksFilterSelect.onRendered(function () {
+	$('select.tasksFilterSelect:not(.initialized)').each(function () {
+		$(this).addClass('initialized');
+		$(this).selectpicker();
+		$(this).change(function () {
+			// filter
+			var param = $(this).hasClass('type') ? 'tasksTypeFilter' :
+				($(this).hasClass('plane') ? 'tasksPlaneFilter' : 'tasksAssigneeFilter');
+			Session.set(param, $(this).val());
+		});
+	});
+	tasksFilterSelectTimer = Meteor.setTimeout(function () {
+		$('select.tasksFilterSelect.initialized').each(function () {
+			$(this).siblings('.dropdown-toggle:not(.first-click)')
+				.addClass('first-click').click().blur(); // bugfix
+		});
+		tasksFilterSelectTimer = false;
+	}, 10);
+});
+Template.tasksFilterOption.onRendered(function () {
+	if (tasksFilterSelectTimer !== false) {
+		Meteor.clearTimeout(tasksFilterSelectTimer);
+	}
+	tasksFilterSelectTimer = Meteor.setTimeout(function () {
+		$('select.tasksFilterSelect.initialized').each(function () {
+			$(this).selectpicker("refresh");
+		});
+		tasksFilterSelectTimer = false;
+	}, 10);
+});
+
+Template.tasksFilterOption.helpers({
+	// is option selected
+	isPlaneSelected(option) {
+		return Session.get('tasksPlaneFilter') === option ? 'selected' : '';
+	},
+	isAssigneeSelected(option) {
+		return Session.get('tasksAssigneeFilter') === option ? 'selected' : '';
+	},
+});
+
+Template.tasksFilterSelect.helpers({
+	// is option selected
+	isSelected(option) {
+		return Session.get('tasksTypeFilter') === option ? 'selected' : '';
+	},
+	// filter type
+	forType(filter) {
+		return filter === 'type';
+	},
+	forPlane(filter) {
+		return filter === 'plane';
+	},
+	forAssignee(filter) {
+		return filter === 'assignee';
+	},
+	// employees
+	availableEmployees() {
+		return Employees.find({});
+	},
+	// employees
+	availablePlanes() {
+		return Planes.find({});
+	},
+});
+
 Template.tasksTable.events({
+	// filter
+	'click .tasksTableFilter'(e) {
+		var btn = $(e.currentTarget);
+		e.preventDefault();
+		var toFilter = btn.hasClass('tasksTableClosed') ? 2 :
+			(btn.hasClass('planesListActive') ? 1 : 0);
+		Session.set('planeListFilter', toFilter);
+	},
 	// add task
 	'click #addTask'(e) {
 		e.preventDefault();
@@ -233,7 +328,8 @@ Template.taskModal.helpers({
 Template.taskModal.events({
 	// modal autofocus & select bugfix
 	'shown.bs.modal .modal'(e) {
-		$('.dropdown-toggle:not(.first-click)', modal).addClass('first-click').click(); // bugfix
+		$('.dropdown-toggle:not(.first-click)', modal)
+			.addClass('first-click').click().blur(); // bugfix
 		var modal = $(e.currentTarget);
 		$('.auto-focus', modal).trigger('focus');
 	},
@@ -247,7 +343,7 @@ Template.taskModal.events({
 		var sel = $('select', select);
 		sel.removeClass('template');
 		sel.selectpicker('refresh');
-		$('.dropdown-toggle', select).click(); // bugfix
+		$('.dropdown-toggle', select).click().blur(); // bugfix
 		// deletion handler
 		$('.btnRemoveParent', select).click(function () {
 			$(this).parent().remove();
