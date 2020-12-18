@@ -2,10 +2,11 @@
   "ExpandedNodes": [
     "",
     "\\client",
-    "\\imports",
+    "\\public",
+    "\\public\\assets",
     "\\server",
     "\\tests"
   ],
-  "SelectedNode": "\\client\\client.js",
+  "SelectedNode": "\\README.md",
   "PreviewInSolutionExplorer": false
 }
